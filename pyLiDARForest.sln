@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.24720.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "ValidateLAS", "validate\ValidateLAS.pyproj", "{6B7891E6-8823-477B-A90F-DF9428E7B023}"
+EndProject
+Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "lidarUtils", "lidarutils\lidarUtils.pyproj", "{8049A2E9-3055-44AD-BF72-DB35BCC21916}"
+EndProject
+Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "stuff", "stuff\stuff.pyproj", "{B2861BB1-7EB3-4559-B385-152E18ED386A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{6B7891E6-8823-477B-A90F-DF9428E7B023}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6B7891E6-8823-477B-A90F-DF9428E7B023}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8049A2E9-3055-44AD-BF72-DB35BCC21916}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8049A2E9-3055-44AD-BF72-DB35BCC21916}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B2861BB1-7EB3-4559-B385-152E18ED386A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B2861BB1-7EB3-4559-B385-152E18ED386A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
