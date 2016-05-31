@@ -8,6 +8,7 @@ Some notes about it:
 
 1) Some routines use laspy, a Python library that provides access to LAS files. So, you should install laspy before use 
 
-I´m using Visual Studio as editor, the main file of the group is pyLiDARForest.sln. To use it, you can download and install any version of Visual Studio (including Community Edition, that´s free) and then install Python Tools for Visual Studio.
+I´m using Visual Studio as editor, the main file of the group is pyLiDARForest.sln. To use it, you can download and install any version of Visual Studio (including [Community Edition](https://www.visualstudio.com/en-us/products/visual-studio-community-vs.aspx), that´s free) and then install [Python Tools for Visual Studio](https://www.visualstudio.com/en-us/products/visual-studio-community-vs.aspx).
+
 Of course, you can use any editor you want, the libraries will work nicely.
 
