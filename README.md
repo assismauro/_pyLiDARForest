@@ -13,7 +13,9 @@ Some notes about it:
 
 3) The routines are based in some "science" Python libraries, like numpy and scipy. You can install it in your Python environment, but I suggest you install and use [Anaconda](https://www.continuum.io/downloads), a Python environment including many libraries to deal with math & science, and of course, numpy & scipy.
 
-4) I´m using Visual Studio as editor, the solution file is pyLiDARForest.sln. To use it, you can download and install any version of Visual Studio, including [Community Edition](https://www.visualstudio.com/en-us/products/visual-studio-community-vs.aspx), that´s free, and then install [Python Tools for Visual Studio](https://www.visualstudio.com/en-us/products/visual-studio-community-vs.aspx).
+4) Validation routines will also use [Fusion](http://forsys.cfr.washington.edu/fusion.html) and [LASTools](https://rapidlasso.com/lastools/). You should download and install it before use Validate.py. There´s a file called valParameters.py where you can set the paths to those softwares, if you don´t install it at default path.
+
+5) I´m using Visual Studio as editor, the solution file is pyLiDARForest.sln. To use it, you can download and install any version of Visual Studio, including [Community Edition](https://www.visualstudio.com/en-us/products/visual-studio-community-vs.aspx), that´s free, and then install [Python Tools for Visual Studio](https://www.visualstudio.com/en-us/products/visual-studio-community-vs.aspx).
 Of course, you can use any editor you want, the libraries will work nicely.
 ## Documentation
 Files are documented using [Docstring]( https://en.wikipedia.org/wiki/Docstring) style, which means that the routines are documented inside the source code. For each module there is a short description in a md (text) file, and when you need to dig on the more specific information you can check docstrings in source code (they are the blocs between ‘’’)
