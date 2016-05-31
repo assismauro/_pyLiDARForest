@@ -5,7 +5,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{b2861bb1-7eb3-4559-b385-152e18ed386a}</ProjectGuid>
     <ProjectHome />
-    <StartupFile>CheckDirFileStruct.py</StartupFile>
+    <StartupFile>findInvalidValues.py</StartupFile>
     <SearchPath />
     <WorkingDirectory>.</WorkingDirectory>
     <OutputPath>.</OutputPath>

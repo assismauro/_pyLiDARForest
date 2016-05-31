@@ -20,6 +20,7 @@ import math
 from laspy import file
 import warnings
 
+
 def saveCloud(fname,header,cloud):
     outFile = file.File(fname, mode = "w", header = header)
     outFile.points = cloud
