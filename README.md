@@ -1,4 +1,5 @@
-![top](images/transect1.png)
+![Logo](transect1.png)
+
 
 # pyLiDARForest
 
