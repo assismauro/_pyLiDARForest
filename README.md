@@ -73,6 +73,19 @@ python lasutils.py –h
       -v VERBOSE, --verbose VERBOSE
                         show processing messages.
 
-## Links to more specific documentation
+##Libraries & programs
 
-[lidarutils](lidarutils/lidarutils.md)
+**[lidarUtils.py](lidarutils/lidarutils.md)**
+Support routines to process LAS files
+
+**CheckDirFileStruct.py**
+Check if a group of files exists in a dir structure
+
+**Validate.py**
+Class that validates a LAS file checking some parameters and values. 
+
+**ValidateLAS.py**
+Program that uses Validate.py to validate a group of LAS files (multithread)
+
+**valParameters.py**
+Parameters to be used in Validate.
