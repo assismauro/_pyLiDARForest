@@ -17,7 +17,7 @@ Some notes about it:
 Of course, you can use any editor you want, the libraries will work nicely.
 ## Documentation
 Files are documented using [Docstring]( https://en.wikipedia.org/wiki/Docstring) style, which means that the routines are documented inside the source code. For each module there is a short description in a md (text) file, and when you need to dig on the more specific information you can check docstrings in source code (they are the blocs between ‘’’)
-For those files that can be executed from command line, you have also the option –h, that will describe shortly the command line options available:
+For those files that can be executed from command line, you have also the option –h, that will describe shortly the command line options available, for example:
 
 python lasutils.py –h
 
@@ -72,3 +72,7 @@ python lasutils.py –h
 
       -v VERBOSE, --verbose VERBOSE
                         show processing messages.
+
+## Links to more specific documentation
+
+[lidarutils](lidarutils/lidarutils.md)
