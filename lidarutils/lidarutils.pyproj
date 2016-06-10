@@ -7,13 +7,16 @@
     <ProjectHome />
     <StartupFile>lidarUtils.py</StartupFile>
     <SearchPath />
-    <WorkingDirectory>.</WorkingDirectory>
+    <WorkingDirectory>D:\CCST\Software\LiDARWriter\lidarwriter\</WorkingDirectory>
     <OutputPath>.</OutputPath>
     <ProjectTypeGuids>{888888a0-9f3d-457c-b088-3a5042f75d52}</ProjectTypeGuids>
     <LaunchProvider>Standard Python launcher</LaunchProvider>
     <InterpreterId />
     <InterpreterVersion />
     <Name>lidarUtils</Name>
+    <IsWindowsApplication>False</IsWindowsApplication>
+    <CommandLineArguments>-tp -n 4 D:\CCST\Data\T_355\NP_T-355_LAS\NP_T-355.las</CommandLineArguments>
+    <EnableNativeCodeDebugging>False</EnableNativeCodeDebugging>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)' == 'Debug'" />
   <PropertyGroup Condition="'$(Configuration)' == 'Release'" />
