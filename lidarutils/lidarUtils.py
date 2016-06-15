@@ -20,6 +20,7 @@ import math
 from laspy import file
 import warnings
 
+
 def saveCloud(fname,header,cloud):
     outFile = file.File(fname, mode = "w", header = header)
     outFile.points = cloud
@@ -201,7 +202,7 @@ def slices(inputfname,nslices=1,percbottom=-1.0,perctop=-1.0,verbose=True):
         print
         print("Done in {0}s.".format(int(time.time()-start)))    
 
-def toFloor(inputfname,outputfname=None,floor=0.0,verbose=True):
+def toFloor(inputfname,outputfname=None,floor=0.0):
     inFile = file.File(inputfname, mode = "r")
     outputfname = outputfname if not(outputfname == None) else "toFloor_"+os.path.basename(inputfname)
     outFile = file.File(outputfname,mode="w", header=inFile.header)
@@ -212,7 +213,7 @@ def toFloor(inputfname,outputfname=None,floor=0.0,verbose=True):
     inFile.close()
     outFile.close()
 
-def topBottom(command,inputfname,outputfname=None,cut=None,cutpercent=None,verbose=True):
+def topBottom(command,inputfname,outputfname=None,cut=None,cutpercent=None):
     if(cut == None) and (cutpercent == None):
         Exception("You should inform cut or cutpercent")    
     inFile = file.File(inputfname, mode = "r")
@@ -231,7 +232,7 @@ def topBottom(command,inputfname,outputfname=None,cut=None,cutpercent=None,verbo
     saveCloud(outputfname,inFile.header,inFile.points[validZ])
     inFile.close()
             
-def exportToCSV(inputfname,outputfname=None,delimiter=";",verbose=True):
+def exportToCSV(inputfname,outputfname=None,delimiter=";"):
     inFile = file.File(inputfname, mode = "r")
     if(outputfname == None):
         outputfname = inputfname.rsplit(".",1)[0]+".csv"
@@ -253,7 +254,7 @@ def exportToCSV(inputfname,outputfname=None,delimiter=";",verbose=True):
     output.close()
     inFile.close()
     
-def displayInfo(inputfname,verbose=True):
+def displayInfo(inputfname):
     inFile = file.File(inputfname, mode = "r")    
     displayHeader(inFile.header)
     print("\r\nPoint format:")
@@ -261,7 +262,7 @@ def displayInfo(inputfname,verbose=True):
         print(spec.name)
     inFile.close()
         
-def projectY(inputfname,outputfname=None,verbose=True):
+def projectY(inputfname,outputfname=None):
     inFile = file.File(inputfname, mode = "r")
     outputfname = outputfname if not(outputfname == None) else "projectY_"+os.path.basename(inputfname)
     outFile = file.File(outputfname,mode="w", header=inFile.header)
@@ -272,7 +273,7 @@ def projectY(inputfname,outputfname=None,verbose=True):
     outFile.close()
     inFile.close()
 
-def projectXY(inputfname,outputfname=None,verbose=True):
+def projectXY(inputfname,outputfname=None):
     inFile = file.File(inputfname, mode = "r")
     outputfname = outputfname if not(outputfname == None) else "projectXY_"+os.path.basename(inputfname)
     outFile = file.File(outputfname,mode="w", header=inFile.header)
@@ -295,17 +296,17 @@ def main():
     elif(args.task == 's'):
         slices(args.inputfname,args.nslices,args.percbottom,args.perctop,args.verbose)
     elif(args.task == 'd'):
-        displayInfo(args.inputfname,args.verbose)
+        displayInfo(args.inputfname)
     elif(args.task == 'e'):
-        exportToCSV(args.inputfname,args.outputfname,";",args.verbose)
+        exportToCSV(args.inputfname,args.outputfname,";")
     elif(args.task == 'f'):
         toFloor(args.inputfname,args.outputfname,args.floor)
     elif((args.task == 'b') or (args.task == 't')):
-        topBottom(args.task,args.inputfname,args.outputfname,args.percent,args.verbose)
+        topBottom(args.task,args.inputfname,args.outputfname,args.percent)
     elif(args.task == 'py'):
-        projectY(args.inputfname,args.outputfname,args.verbose)
+        projectY(args.inputfname,args.outputfname)
     elif(args.task == 'pxy'):
-        projectXY(args.inputfname,args.outputfname,args.verbose)
+        projectXY(args.inputfname,args.outputfname)
         
 # In[ ]:
 
