@@ -28,13 +28,6 @@
     <Compile Include="validateLAS.py" />
     <Compile Include="valParameters.py" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\lidarutils\lidarutils.pyproj">
-      <Name>lidarutils</Name>
-      <Project>{8049a2e9-3055-44ad-bf72-db35bcc21916}</Project>
-      <Private>True</Private>
-    </ProjectReference>
-  </ItemGroup>
   <Import Project="$(PtvsTargetsFile)" Condition="Exists($(PtvsTargetsFile))" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.Common.targets" Condition="!Exists($(PtvsTargetsFile))" />
 </Project>

@@ -5,15 +5,15 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{b2861bb1-7eb3-4559-b385-152e18ed386a}</ProjectGuid>
     <ProjectHome />
-    <StartupFile>CheckDirFileStruct.py</StartupFile>
-    <SearchPath />
+    <StartupFile>findInvalidValues.py</StartupFile>
+    <SearchPath>..\lidarutils\</SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
     <OutputPath>.</OutputPath>
     <ProjectTypeGuids>{888888a0-9f3d-457c-b088-3a5042f75d52}</ProjectTypeGuids>
     <LaunchProvider>Standard Python launcher</LaunchProvider>
     <InterpreterId />
     <InterpreterVersion />
-    <CommandLineArguments>D:\Transectos_Fototerra\NP_T-003_FWF_LAS\NP_T-???_FWF.LAS -t</CommandLineArguments>
+    <CommandLineArguments>G:\TRANSECTS\T_002\NP_T-002_FWF_LAS\NP_T-002_FWF.LAS</CommandLineArguments>
     <EnableNativeCodeDebugging>False</EnableNativeCodeDebugging>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)' == 'Debug'" />

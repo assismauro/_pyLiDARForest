@@ -1,4 +1,3 @@
-Mauro
 [dir]
 MDT_T-<transect>_ASC
 [files]
