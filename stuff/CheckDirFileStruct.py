@@ -7,17 +7,22 @@ Created on Thu Mar 17 13:28:30 2016
 
 # In[ ]:
 
+import sys
 import argparse
 from argparse import RawTextHelpFormatter
 import os
 
 def ParseCmdLine():
-    parser = argparse.ArgumentParser(description="Check path & file structure.",formatter_class=RawTextHelpFormatter)
-    parser.add_argument("filestruct",help="Directory structure to be checked.")
-    parser.add_argument("-r","--root", help="Root path.")
-    parser.add_argument("-v","--verbose", type=int, help="show processing messages.", default = False)
+    try:
+        parser = argparse.ArgumentParser(description="Check path & file structure.",formatter_class=RawTextHelpFormatter)
+        parser.add_argument("filestruct",help="Directory structure to be checked.")
+        parser.add_argument("-r","--root", type=str, help="Root path.")
+        parser.add_argument("-v","--verbose", type=int, help="show processing messages.", default = False)
 #    parser.add_argument("-m","--masktransect", type=str ,help="Transect subdir mask.") # ex: T_%%%"
-    return parser.parse_args()
+        return parser.parse_args()
+    except:
+        print("Unexpected error:", sys.exc_info()[0])
+        raise
 
 def SubDirPath(d):
     return filter(os.path.isdir, [os.path.join(d,f) for f in os.listdir(d)])
