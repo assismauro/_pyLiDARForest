@@ -75,8 +75,8 @@ def displayHeader(header):
     print("Points count   : {0}".format(header.point_records_count))
     print("Scale x,y,z    : {0}".format(header.scale))
     print("Offset x,y,z   : {0}".format(header.offset))
-    print("Max Values     : {0}".format(header.max))
     print("Min Values     : {0}".format(header.min))
+    print("Max Values     : {0}".format(header.max))
     
 def splitCells(inputfname, cellsize=-1, numberofcells=-1, verbose=False):
     start = time.time()

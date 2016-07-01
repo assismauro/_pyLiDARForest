@@ -12,6 +12,11 @@ import argparse
 from argparse import RawTextHelpFormatter
 import os
 
+def programHeader():
+    print("Check Directory/file structure v0.8")
+    print("")
+    print("Processing...")
+
 def ParseCmdLine():
     try:
         parser = argparse.ArgumentParser(description="Check path & file structure.",formatter_class=RawTextHelpFormatter)
@@ -36,6 +41,7 @@ def CheckDirFileStruct():
     with open(args.filestruct) as f:
         struct = f.readlines()
     subdirs=SubDirPath(args.root)
+    therearebugs=False
     for subdir in subdirs:
         transect = subdir[-3:]
         for item in struct:
@@ -59,13 +65,18 @@ def CheckDirFileStruct():
                         else:
                             if args.verbose == 1:
                                 if not ok:
+                                    therearebugs=True
                                     print("Transect structure failed. File {0} doesn´t exists.".format(completefname))
                             else:
                                 if not ok:
+                                    therearebugs=True
                                     print os.path.basename(completefname)
+    return therearebugs
 
 def main():
-    CheckDirFileStruct()
+    programHeader()
+    if not CheckDirFileStruct():
+        print("File structure is ok.")
     print("Program ended.")
 
 if __name__ == "__main__":

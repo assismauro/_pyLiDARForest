@@ -1,7 +1,7 @@
 [dir]
 MDT_T-<transect>_ASC
 [files]
-MDT_T-<transect>.asc a
+MDT_T-<transect>.asc
 MDT_T-<transect>.prj
 [dir]
 NP_MDT_T-<transect>_LAS

@@ -13,7 +13,7 @@
     <LaunchProvider>Standard Python launcher</LaunchProvider>
     <InterpreterId />
     <InterpreterVersion />
-    <CommandLineArguments>-c 12 -v 0 -m 4 -z 20 -x 20.0 -l 1.2 G:\TRANSECTS\NP_T-???_FWF.LAS</CommandLineArguments>
+    <CommandLineArguments>-c 1 -v 1 -m 4 -z 20 -x 20.0 -l 1.2 H:\TRANSECTS\T_452\NP_T-452_FWF_LAS\NP_T-452_FWF.LAS -vfp VALIDATE_FILES -csv result.csv -sv 1,2,3,4,5,6</CommandLineArguments>
     <EnableNativeCodeDebugging>False</EnableNativeCodeDebugging>
     <Name>ValidateLAS</Name>
   </PropertyGroup>

@@ -11,6 +11,7 @@ import sys
 
 import fnmatch
 import time
+import shutil
 
 def FindFiles(directory, pattern):
      flist=[]
@@ -19,5 +20,9 @@ def FindFiles(directory, pattern):
              flist.append(os.path.join(root, filename))
      return flist
 
-fnames=FindFiles(r"H:\PASTAS_SBET_SUBSTITUIR","*.*")
-print
+fnames=sorted(FindFiles(r"H:\PASTAS_SBET_SUBSTITUIR","*.*"))
+for fname in fnames:
+    destination = r"h:\TRANSECTS\T_{0}\SBET_T-{0}_SHP\{1}".format(fname[-7:][0:3],os.path.basename(fname))
+    print "Copy {0} to {1}:".format(fname,destination),"... ",
+    shutil.copyfile(fname,destination)
+    print "done."
