@@ -5,7 +5,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{b2861bb1-7eb3-4559-b385-152e18ed386a}</ProjectGuid>
     <ProjectHome />
-    <StartupFile>moveFiles.py</StartupFile>
+    <StartupFile>las2img.py</StartupFile>
     <SearchPath>..\lidarutils\</SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
     <OutputPath>.</OutputPath>
@@ -13,8 +13,8 @@
     <LaunchProvider>Standard Python launcher</LaunchProvider>
     <InterpreterId />
     <InterpreterVersion />
-    <CommandLineArguments>H:\TRANSECTS\SHP_FWF H:\TRANSECTS\SHP -m NP_T-???.shp,NP_T-???.shx,NP_T-???.dbf -v 1</CommandLineArguments>
-    <EnableNativeCodeDebugging>False</EnableNativeCodeDebugging>
+    <CommandLineArguments>G:\NP_T-054.LAS G:\ -r 0.0018 -v 1</CommandLineArguments>
+    <EnableNativeCodeDebugging>True</EnableNativeCodeDebugging>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)' == 'Debug'" />
   <PropertyGroup Condition="'$(Configuration)' == 'Release'" />
@@ -34,7 +34,16 @@
     <Compile Include="idLASFile.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="las2img.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="moveFiles.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="procScriptMultithread.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="teste.py">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
