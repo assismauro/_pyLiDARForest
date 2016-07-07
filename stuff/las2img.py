@@ -7,13 +7,16 @@ from matplotlib import pyplot as plt
 import argparse
 import laspy
 import pandas as pd
+from scipy import ndimage
+import EarthTones
 
 class las2img(object):
 
-    def __init__(self, inputfname, verbose):
+    def __init__(self, inputfname, palette, verbose):
         self.inputfname = inputfname
         try:
             self.inFile = laspy.file.File(self.inputfname, mode = 'r')
+            self.palette=palette
             self.verbose=verbose
         except:
             print("Impossible to open file {0}".format(self.inputfname))
@@ -33,6 +36,7 @@ class las2img(object):
         parser.add_argument("destinationpath", type=str, 
             help = "Destination path of output image.")
         parser.add_argument("-r","--aspectratio", help="image aspect ratio",type=float, default=0.0018) 
+        parser.add_argument("-p","--palette", help=" 0: grayscale, 1: earthtones pallete, 2. opencv",type=float, default=1) 
         parser.add_argument("-v","--verbose",help = "Show intermediate messages.")
         args=parser.parse_args()
 
@@ -46,25 +50,34 @@ class las2img(object):
         print '\r[{0}] {1}%'.format('#'*int(progress/10), int(progress)),
 
     def Execute(self,aspectratio):
-        #ratio=imagewidth/float(np.amax(self.inFile.X) - np.amin(self.inFile.X))
         imagewidth=int(aspectratio*(np.amax(self.inFile.X) - np.amin(self.inFile.X)))
         imageheight=int(aspectratio*(np.amax(self.inFile.Y) - np.amin(self.inFile.Y)))
         X=self.inFile.X-np.amin(self.inFile.X)
-        X = np.around(X * aspectratio).astype(int)-1
+        X=np.around(X * aspectratio).astype(int)-1
         Y=self.inFile.Y-np.amin(self.inFile.Y)
         Y = np.around(Y * aspectratio).astype(int)-1
         Z=self.inFile.Z-np.amin(self.inFile.Z)
-        self.image = np.zeros(shape=(imageheight,imagewidth), dtype = "uint8")
-        
-        heigth=(255.0/np.amax(Z)*Z).astype(int)
+        self.inFile.close()
 
-        m=np.column_stack((heigth,X))
+        self.image = np.zeros(shape=(imageheight+1,imagewidth+1,3), dtype = "uint8")
+        
+        if self.palette != 1:
+            Z=(255.0/np.amax(Z)*Z).astype(int)
+
+        m=np.column_stack((Z,X))
         m=np.column_stack((m,Y))
+        Y=[]
+        X=[]
+        Z=[]
         df=pd.DataFrame(m).sort_values(0)
         i=0
         total=len(df)
+        earthTones=EarthTones.EarthTones(0,df.min()[0],df.max()[0])
         for row in df.itertuples():
-            self.image[row[3],row[2]]=row[1]
+            if self.palette == 1:
+                self.image[row[3],row[2]]=earthTones.MapColor(row[1])
+            else:
+                self.image[row[3],row[2]]=row[1]
             if self.verbose > 0:
                 if (i % 1000000) == 0:
                     self.update_progress(float(i)/total*100)
@@ -73,15 +86,25 @@ class las2img(object):
         print('')
 
     def Close(self,destinationpath):
-        outputfname=destinationpath + ('\\' if destinationpath[-1:] != '\\'  else '')+os.path.splitext(os.path.basename(self.inFile.filename))[0]+'.png'
+        outputfname=destinationpath + ('\\' if destinationpath[-1:] != '\\'  else '')+os.path.splitext(os.path.basename(self.inFile.filename))[0]+'.tif'
         if args.verbose > 0:
-            print('Saving {0}:'.format(outputfname))
-        cv2.imwrite(outputfname,self.image)
-        self.inFile.close()
+            print('Saving {0}...'.format(outputfname))
+
+        fimg=cv2.flip(self.image,0)
+        if self.palette == 2:
+            fimg=cv2.applyColorMap(fimg,cv2.COLORMAP_SUMMER)
+        if not cv2.imwrite(outputfname,fimg):
+            print("Error saving image.")
+            return False
+        return True
        
 if __name__ == "__main__":
-    args=las2img.ProcessCmdLine()
-    l2i = las2img(args.inputfname,args.verbose)
+    try:
+        args=las2img.ProcessCmdLine()
+    except:
+        print("Unexpected error:", sys.exc_info()[0])
+        raise
+    l2i = las2img(args.inputfname,args.palette,args.verbose)
     if args.verbose > 0:
         las2img.Header()
     l2i.Execute(args.aspectratio)

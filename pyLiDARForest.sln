@@ -14,6 +14,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		images\transect1.png = images\transect1.png
 	EndProjectSection
 EndProject
+Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "drafts", "drafts\drafts.pyproj", "{48485318-D65C-421A-B5D1-A779DB7796E0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -26,6 +28,8 @@ Global
 		{8049A2E9-3055-44AD-BF72-DB35BCC21916}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B2861BB1-7EB3-4559-B385-152E18ED386A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{B2861BB1-7EB3-4559-B385-152E18ED386A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{48485318-D65C-421A-B5D1-A779DB7796E0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{48485318-D65C-421A-B5D1-A779DB7796E0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -21,13 +21,18 @@ def ParseCmdLine():
     parser.add_argument('inputfname',help='las file to be processed.')
     parser.add_argument('-c','--processorcores', type=int, help='Processor cores to use.', default = 1)
     parser.add_argument('-o','--otherparams',help='complementary parameters.')
+    parser.add_argument("-v","--verbose",type=int, help = "Show intermediate messages.")
+
     return parser.parse_args()
 
-def RunCommand(command):
+def RunCommand(command, verbose):
     p = subprocess.Popen(command,
                      stdout=subprocess.PIPE,
                      stderr=subprocess.STDOUT)
-    return p.communicate()
+    out, err = p.communicate()
+    if verbose > 0:
+        print(out)
+    return out, err
 
 def FindFiles(directory, pattern):
     flist=[]
@@ -36,8 +41,8 @@ def FindFiles(directory, pattern):
             flist.append(os.path.join(root, filename))
     return flist
 
-def ProcessFile(program,fname,options):
-    RunCommand('python {0} {1} {2}'.format(program,fname,options))
+def ProcessFile(program,fname,options,verbose):
+    RunCommand('python {0} {1} {2}'.format(program,fname,options), verbose)
 
 if __name__ == '__main__':
     Header()
@@ -57,13 +62,13 @@ if __name__ == '__main__':
 
     while i < (len(files) / threads * threads):
         if threads == 1:
-            ProcessFile(args.programname,files[i],args.otherparams)
+            ProcessFile(args.programname,files[i],args.otherparams,args.verbose)
             i+=1
             continue
         startpool=time.time()
         p=Pool(threads)
         for thread in range(0,threads):
-            params=(args.programname,files[i],args.otherparams)
+            params=(args.programname,files[i + thread],args.otherparams,args.verbose)
             p=Process(target=ProcessFile,args=params)
             jobs.append(p)
             p.start()
@@ -72,9 +77,9 @@ if __name__ == '__main__':
         print('Pool elapsed time: {0:.2f}s'.format(time.time()-startpool))    
         i+=threads
     while i < len(files):
-        params=(args.programname,files[i],args.otherparams)
+        params=(args.programname,files[i],args.otherparams,args.verbose)
         if threads == 1:
-            ProcessFile(args.programname,files[i],args.otherparams)    
+            ProcessFile(args.programname,files[i],args.otherparams,args.verbose)    
             i+=1    
             continue        
         startpool = time.time()

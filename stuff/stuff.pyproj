@@ -13,7 +13,7 @@
     <LaunchProvider>Standard Python launcher</LaunchProvider>
     <InterpreterId />
     <InterpreterVersion />
-    <CommandLineArguments>G:\NP_T-054.LAS G:\ -r 0.0018 -v 1</CommandLineArguments>
+    <CommandLineArguments>H:\TRANSECTS\T_054\NP_T-054_LAS\NP_T-054.las H:\TRANSECTS\IMG -r 0.0018 -v 1</CommandLineArguments>
     <EnableNativeCodeDebugging>True</EnableNativeCodeDebugging>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)' == 'Debug'" />
@@ -27,11 +27,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CheckDirFileStruct.py" />
+    <Compile Include="EarthTones.py" />
     <Compile Include="copyFiles.py" />
     <Compile Include="findInvalidValues.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="idLASFile.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="img2las.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="las2img.py">
@@ -41,9 +45,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="procScriptMultithread.py">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="teste.py">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
