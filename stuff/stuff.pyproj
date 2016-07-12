@@ -35,9 +35,7 @@
     <Compile Include="idLASFile.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="img2las.py">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="img2las.py" />
     <Compile Include="las2img.py">
       <SubType>Code</SubType>
     </Compile>
