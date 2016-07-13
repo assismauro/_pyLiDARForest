@@ -35,7 +35,7 @@ class las2img(object):
             help = "LiDAR file to process.")
         parser.add_argument("destinationpath", type=str, 
             help = "Destination path of output image.")
-        parser.add_argument("-r","--aspectratio", help="image aspect ratio",type=float, default=0.0018) 
+        parser.add_argument("-r","--scale", help="image scale",type=float, default=0.0018) 
         parser.add_argument("-p","--palette", help=" 0: grayscale, 1: earthtones pallete, 2. opencv",type=float, default=1) 
         parser.add_argument("-v","--verbose",help = "Show intermediate messages.")
         args=parser.parse_args()
@@ -49,13 +49,13 @@ class las2img(object):
     def update_progress(self,progress):
         print '\r[{0}] {1}%'.format('#'*int(progress/10), int(progress)),
 
-    def Execute(self,aspectratio):
-        imagewidth=int(aspectratio*(np.amax(self.inFile.X) - np.amin(self.inFile.X)))
-        imageheight=int(aspectratio*(np.amax(self.inFile.Y) - np.amin(self.inFile.Y)))
+    def Execute(self,scale):
+        imagewidth=int(scale*(np.amax(self.inFile.X) - np.amin(self.inFile.X)))
+        imageheight=int(scale*(np.amax(self.inFile.Y) - np.amin(self.inFile.Y)))
         X=self.inFile.X-np.amin(self.inFile.X)
-        X=np.around(X * aspectratio).astype(int)-1
+        X=np.around(X * scale).astype(int)-1
         Y=self.inFile.Y-np.amin(self.inFile.Y)
-        Y = np.around(Y * aspectratio).astype(int)-1
+        Y = np.around(Y * scale).astype(int)-1
         Z=self.inFile.Z-np.amin(self.inFile.Z)
         self.inFile.close()
 
@@ -107,7 +107,7 @@ if __name__ == "__main__":
     l2i = las2img(args.inputfname,args.palette,args.verbose)
     if args.verbose > 0:
         las2img.Header()
-    l2i.Execute(args.aspectratio)
+    l2i.Execute(args.scale)
     l2i.Close(args.destinationpath)
     if args.verbose > 0:
         print('Done.')
