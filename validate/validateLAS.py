@@ -49,7 +49,6 @@ def ProcessFile(inputfname,lasversion,minimumpointsdensity,displayheader,cellsiz
     Validate.minimumpointsdensity = minimumpointsdensity
     Validate.displayheader = displayheader
     Validate.cellsize = cellsize
-    Validate.cellsize = cellsize
     Validate.maxpercentcellsbelowdensity = maxpercentcellsbelowdensity
     Validate.validatefilespath = validatefilespath
     Validate.deletefiles = deletefiles
@@ -117,7 +116,7 @@ if __name__ == '__main__':
     Header()
     args=ParseCmdLine()
     if args.selectedvalidations == None:
-        selectedvalidations='1,2,3,4,5,6'
+        selectedvalidations='1,2,3,4,5,6,7'
     else:
         selectedvalidations=args.selectedvalidations
     activevalidations=map(int,selectedvalidations.split(','))

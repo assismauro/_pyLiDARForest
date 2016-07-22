@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import os
 import sys
+import traceback
 import glob
 import fnmatch
 import laspy
@@ -10,6 +11,8 @@ import shapefile
 import shutil
 import tempfile
 import math
+import lidarutils
+from valParameters import valParameters
 
 class Validate(object):
     version = ''
@@ -26,11 +29,12 @@ class Validate(object):
         
     def __init__(self,inputfname, parameters):
         self.inputfname = inputfname;
-        self.inFile = laspy.file.File(self.inputfname, mode = 'rw')
+        self.inFile = laspy.file.File(self.inputfname, mode = 'r')
         self._errorMessages = '' 
         self.parameters = parameters
         if self.validatefilespath != None:
-            self.validatefilespath = os.path.dirname(inputfname)+'\\'+self.validatefilespath
+            if self.validatefilespath.find(':') == -1: # if wasn´t specified, it´s assumied to be relative to LAS file path
+                self.validatefilespath = os.path.dirname(inputfname)+'\\'+self.validatefilespath
             if not os.path.isdir(self.validatefilespath):
                 os.mkdir(self.validatefilespath)
             else:
@@ -288,5 +292,73 @@ class Validate(object):
         else:
             self.TestOk()
             return 0
-    
 
+def main():
+
+    inputfname = r'H:\NP_T-054_FWF.las'
+
+    Validate.version = '1.3'
+    Validate.minimumpointsdensity = 4
+    Validate.displayheader = False
+    Validate.cellsize = 1
+    Validate.maxpercentcellsbelowdensity = 20
+    Validate.validatefilespath = r'e:\temp'
+#    Validate.deletefiles = True
+    Validate.csvresults = True
+    Validate.activevalidations=(1,2,3,4,5,6,7)
+    Validate.verbose = 1
+
+    if(Validate.displayheader):
+        lidarutils.displayInfo(inputfname)
+    
+    failCount = 0
+    parameters = valParameters()
+    try:
+        validate=Validate(inputfname,parameters)
+    except:
+        if 'validate' in locals():
+            validate.TestFail('Exception: {0}'.format(traceback.format_exc()))
+        else:
+            print("Error {0} opening file {1}".format(traceback.format_exc(),inputfname))
+            os._exit(0)
+
+    if 1 in validate.activevalidations:
+        failCount+=validate.CheckLiDARFileSignature()
+
+    if 2 in validate.activevalidations:
+        failCount+=validate.CheckFileVersion()
+
+    if 3 in validate.activevalidations:
+        failCount+=validate.CheckNumberofReturns()
+
+    if 4 in validate.activevalidations:
+        failCount+=validate.CheckMinMaxValues()
+
+    if (5 in validate.activevalidations) or (6 in validate.activevalidations):
+        validate.CreateShpFileLAS()
+        catalogOk=validate.RunCatalog()
+        if catalogOk:
+            validate.CalcShapeFileArea()
+
+    if 5 in validate.activevalidations:
+        failCount+=validate.CheckGlobalPointsDensity()
+
+    if 6 in validate.activevalidations:
+        if catalogOk:
+            failCount+=validate.CheckMaxCellsBelowDensity()
+
+    if 7 in validate.activevalidations:
+        failCount+=validate.CheckXtYtZt()
+    if Validate.verbose > 0:
+        if failCount == 0:
+            print('All validations passed successfully.')
+        else:
+            print('{0} validation(s) failed.'.format(failCount))
+            print(validate.errorMessages)
+    print('File: {0},'.format(inputfname)),
+    validate.Close()
+
+# In[ ]:
+
+if __name__ == "__main__":
+    main()
