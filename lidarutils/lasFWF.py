@@ -7,9 +7,6 @@ import subprocess
 import shapefile
 import shutil
 import tempfile
-import math
-import binascii
-import struct
 
 class FWFFile(laspy.file.File):
     def __init__(self, filename,
@@ -20,14 +17,18 @@ class FWFFile(laspy.file.File):
                    out_srs=None,
                    evlrs = False):
         self.fwffilename=os.path.splitext(filename)[0]+'.wdp'
-        self.fwffile=open(self.fwffilename, "rb")
+        self.fwfsize=os.path.getsize(self.fwffilename)
+        self.fwffile=open(self.fwffilename,mode='r')
         super(FWFFile,self).__init__(filename,header,vlrs,mode,in_srs,out_srs,evlrs)
 
-    def GetFWFData(self,position,length):
-        self.fwffile.seek(position)
-        buff=self.fwffile.read(length)
-        packed_data = binascii.unhexlify('0100000061620000cdcc2c40')
-        values=hexlify(buff)
-        x=struct.unpack(int,values)
-        print x
+    def GetFWFData(self,index=-1,position=-1,length=-1):
+        if (index == -1):
+            self.fwffile.seek(position, os.SEEK_SET)
+            return np.fromfile(self.fwffile,dtype=np.int16,count=length)
+        else:
+            self.fwffile.seek(self.byte_offset_to_waveform_data[index], os.SEEK_SET)
+            return np.fromfile(self.fwffile,dtype=np.int16,count=self.waveform_packet_size[index] / 2)
 
+    def close(self,ignore_header_changes=False,minmax_mode='scaled'):
+        self.fwffile.close()
+        super(FWFFile, self).close(ignore_header_changes,minmax_mode)
