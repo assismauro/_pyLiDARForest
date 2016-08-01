@@ -5,8 +5,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>48485318-d65c-421a-b5d1-a779db7796e0</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>
-    </StartupFile>
+    <StartupFile>LASViewerTest.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -27,6 +26,12 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="FlipRotate.py" />
+    <Compile Include="LASViewerTest.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="scatterGraphics.py">
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
