@@ -5,8 +5,10 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>48485318-d65c-421a-b5d1-a779db7796e0</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>DTM2.py</StartupFile>
-    <SearchPath>..\..\LiDAR-Python-Code\pre_processing\</SearchPath>
+    <StartupFile>
+    </StartupFile>
+    <SearchPath>
+    </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
     <OutputPath>.</OutputPath>
     <Name>drafts</Name>
@@ -35,6 +37,25 @@
     </Compile>
     <Compile Include="findTrees.py" />
     <Compile Include="FlipRotate.py" />
+    <Compile Include="LASViewerTest.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="scatterGraphics.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="simplePlot.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="vispy_mplplot.py">
+      <SubType>Code</SubType>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\lidarutils\lidarutils.pyproj">
+      <Name>lidarutils</Name>
+      <Project>{8049a2e9-3055-44ad-bf72-db35bcc21916}</Project>
+      <Private>True</Private>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
