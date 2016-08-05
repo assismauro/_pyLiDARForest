@@ -1,117 +1,178 @@
+# !/usr/bin/env python
 # -*- coding: utf-8 -*-
+# vispy: gallery 1
+
 """
-Demonstrates use of GLScatterPlotItem with rapidly-updating plots.
-  
+Demonstrating a cloud of points.
 """
-  
-## Add path to library (just for examples; you do not need this)
-#import initExample
-  
-from pyqtgraph.Qt import QtCore, QtGui
-import pyqtgraph.opengl as gl
+
 import numpy as np
-  
-app = QtGui.QApplication([])
-w = gl.GLViewWidget()
-w.opts['distance'] = 20
-w.show()
-w.setWindowTitle('pyqtgraph example: GLScatterPlotItem')
-  
-g = gl.GLGridItem()
-w.addItem(g)
-  
-  
-##
-##  First example is a set of points with pxMode=False
-##  These demonstrate the ability to have points with real size down to a very small scale 
-## 
-pos = np.empty((3, 3))
-size = np.empty((3))
-color = np.empty((3, 4))
-'''
-pos = np.empty((53, 3))
-size = np.empty((53))
-color = np.empty((53, 4))
-'''
-pos[0] = (1,0,0); size[0] = 0.5;   color[0] = (1.0, 0.0, 0.0, 0.5)
-pos[1] = (0,1,0); size[1] = 0.2;   color[1] = (0.0, 0.0, 1.0, 0.5)
-pos[2] = (0,0,1); size[2] = 2./3.; color[2] = (0.0, 1.0, 0.0, 0.5)
-''' 
-z = 0.5
-d = 6.0
-for i in range(3,53):
-    pos[i] = (0,0,z)
-    size[i] = 2./d
-    color[i] = (0.0, 1.0, 0.0, 0.5)
-    z *= 0.5
-    d *= 2.0
-'''  
-sp1 = gl.GLScatterPlotItem(pos=pos, size=size, color=color, pxMode=False)
-sp1.translate(5,5,0)
-w.addItem(sp1)
-  
-'''    
-##
-##  Second example shows a volume of points with rapidly updating color
-##  and pxMode=True
-##
-  
-pos = np.random.random(size=(100000,3))
-pos *= [10,-10,10]
-pos[0] = (0,0,0)
-color = np.ones((pos.shape[0], 4))
-d2 = (pos**2).sum(axis=1)**0.5
-size = np.random.random(size=pos.shape[0])*10
-sp2 = gl.GLScatterPlotItem(pos=pos, color=(1,1,1,1), size=size)
-phase = 0.
-  
-w.addItem(sp2)
-  
-  
-##
-##  Third example shows a grid of points with rapidly updating position
-##  and pxMode = False
-##
-  
-pos3 = np.zeros((100,100,3))
-pos3[:,:,:2] = np.mgrid[:100, :100].transpose(1,2,0) * [-0.1,0.1]
-pos3 = pos3.reshape(10000,3)
-d3 = (pos3**2).sum(axis=1)**0.5
-  
-sp3 = gl.GLScatterPlotItem(pos=pos3, color=(1,1,1,.3), size=0.1, pxMode=False)
-  
-w.addItem(sp3)
 
-def update():
-    ## update volume colors
-    global phase, sp2, d2
-    s = -np.cos(d2*2+phase)
-    color = np.empty((len(d2),4), dtype=np.float32)
-    color[:,3] = np.clip(s * 0.1, 0, 1)
-    color[:,0] = np.clip(s * 3.0, 0, 1)
-    color[:,1] = np.clip(s * 1.0, 0, 1)
-    color[:,2] = np.clip(s ** 3, 0, 1)
-    sp2.setData(color=color)
-    phase -= 0.1
-  
-    ## update surface positions and colors
-    global sp3, d3, pos3
-    z = -np.cos(d3*2+phase)
-    pos3[:,2] = z
-    color = np.empty((len(d3),4), dtype=np.float32)
-    color[:,3] = 0.3
-    color[:,0] = np.clip(z * 3.0, 0, 1)
-    color[:,1] = np.clip(z * 1.0, 0, 1)
-    color[:,2] = np.clip(z ** 3, 0, 1)
-    sp3.setData(pos=pos3, color=color)
+from vispy import gloo
+from vispy import app
+from vispy.util.transforms import perspective, translate, rotate
 
-t = QtCore.QTimer()
-t.timeout.connect(update)
-t.start(50)
-  
-'''  
-## Start Qt event loop unless running in interactive mode.
+import lasFWF
+
+vert = """
+#version 120
+// Uniforms
+// ------------------------------------
+uniform mat4 u_model;
+uniform mat4 u_view;
+uniform mat4 u_projection;
+uniform float u_linewidth;
+uniform float u_antialias;
+uniform float u_size;
+// Attributes
+// ------------------------------------
+attribute vec3  a_position;
+attribute vec4  a_fg_color;
+attribute vec4  a_bg_color;
+attribute float a_size;
+// Varyings
+// ------------------------------------
+varying vec4 v_fg_color;
+varying vec4 v_bg_color;
+varying float v_size;
+varying float v_linewidth;
+varying float v_antialias;
+void main (void) {
+    v_size = a_size * u_size;
+    v_linewidth = u_linewidth;
+    v_antialias = u_antialias;
+    v_fg_color  = a_fg_color;
+    v_bg_color  = a_bg_color;
+    gl_Position = u_projection * u_view * u_model * vec4(a_position,1.0);
+    gl_PointSize = v_size + 2*(v_linewidth + 1.5*v_antialias);
+}
+"""
+
+frag = """
+#version 120
+
+varying vec4 v_fg_color;
+varying vec4 v_bg_color;
+varying float v_size;
+varying float v_linewidth;
+varying float v_antialias;
+
+float disc(vec2 P, float size)
+{
+    float r = length((P.xy - vec2(0.5,0.5))*size);
+    r -= v_size/2;
+    return r;
+}
+
+void main()
+{
+    float size = v_size +2*(v_linewidth + 1.5*v_antialias);
+    float t = v_linewidth/2.0-v_antialias;
+    float r = disc(gl_PointCoord, size);
+    float d = abs(r) - t;
+    if( r > (v_linewidth/2.0+v_antialias))
+    {
+        discard;
+    }
+    else if( d < 0.0 )
+    {
+       gl_FragColor = v_fg_color;
+    }
+    else
+    {
+        float alpha = d/v_antialias;
+        alpha = exp(-alpha*alpha);
+        if (r > 0)
+            gl_FragColor = vec4(v_fg_color.rgb, alpha*v_fg_color.a);
+        else
+            gl_FragColor = mix(v_bg_color, v_fg_color, alpha);
+    }
+}
+"""
+
+
+# ------------------------------------------------------------ Canvas class ---
+class Canvas(app.Canvas):
+
+    def __init__(self):
+        app.Canvas.__init__(self, keys='interactive', size=(800, 600))
+        ps = self.pixel_scale
+        fwf=lasFWF.FWFFile(r'D:\CCST\Data\T_356\NP_T-356_FWF_LAS\NP_T-356_FWF.LAS')
+        # Create vertices
+        n = 1000000
+        data = np.zeros(n, [('a_position', np.float32, 3),
+                            ('a_bg_color', np.float32, 4),
+                            ('a_fg_color', np.float32, 4),
+                            ('a_size', np.float32, 1)])
+        data['a_position'] = 0.45 * np.random.randn(n, 3)
+        data['a_bg_color'] = 0, 0, 0, 1 #np.random.uniform(0.85, 1.00, (n, 4))
+        data['a_fg_color'] = 0, 0, 0, 1
+        data['a_size'] = 3 #np.random.uniform(5*ps, 10*ps, n)
+        u_linewidth = 1.0
+        u_antialias = 1.0
+
+        self.translate = 5
+        self.program = gloo.Program(vert, frag)
+        self.view = translate((0, 0, -self.translate))
+        self.model = np.eye(4, dtype=np.float32)
+        self.projection = np.eye(4, dtype=np.float32)
+
+        self.apply_zoom()
+
+        self.program.bind(gloo.VertexBuffer(data))
+        self.program['u_linewidth'] = u_linewidth
+        self.program['u_antialias'] = u_antialias
+        self.program['u_model'] = self.model
+        self.program['u_view'] = self.view
+        self.program['u_size'] = 5 / self.translate
+
+        self.theta = 0
+        self.phi = 0
+
+        gloo.set_state('translucent', clear_color='white')
+
+        #self.timer = app.Timer('auto', connect=self.on_timer, start=True)
+
+        self.show()
+
+    def on_key_press(self, event):
+        if event.text == ' ':
+            if self.timer.running:
+                self.timer.stop()
+            else:
+                self.timer.start()
+
+    def on_timer(self, event):
+        self.theta += .5
+        self.phi += .5
+        self.model = np.dot(rotate(self.theta, (0, 0, 1)),
+                            rotate(self.phi, (0, 1, 0)))
+        self.program['u_model'] = self.model
+        self.update()
+
+    def on_resize(self, event):
+        self.apply_zoom()
+
+    def on_mouse_wheel(self, event):
+        self.translate -= event.delta[1]
+        self.translate = max(2, self.translate)
+        self.view = translate((0, 0, -self.translate))
+
+        self.program['u_view'] = self.view
+        self.program['u_size'] = 5 / self.translate
+        self.update()
+
+    def on_draw(self, event):
+        gloo.clear()
+        self.program.draw('points')
+
+    def apply_zoom(self):
+        gloo.set_viewport(0, 0, self.physical_size[0], self.physical_size[1])
+        self.projection = perspective(45.0, self.size[0] /
+                                      float(self.size[1]), 1.0, 1000.0)
+        self.program['u_projection'] = self.projection
+
+
 if __name__ == '__main__':
-    import sys
-    if (sys.flags.interactive != 1) or not hasattr(QtCore, 'PYQT_VERSION'):
-        QtGui.QApplication.instance().exec_()
+    c = Canvas()
+    app.run()
