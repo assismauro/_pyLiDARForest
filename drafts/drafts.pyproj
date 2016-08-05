@@ -5,14 +5,15 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>48485318-d65c-421a-b5d1-a779db7796e0</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>
-    </StartupFile>
-    <SearchPath>
-    </SearchPath>
+    <StartupFile>DTM2.py</StartupFile>
+    <SearchPath>..\..\LiDAR-Python-Code\pre_processing\</SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
     <OutputPath>.</OutputPath>
     <Name>drafts</Name>
     <RootNamespace>drafts</RootNamespace>
+    <LaunchProvider>Standard Python launcher</LaunchProvider>
+    <CommandLineArguments>E:\mauro.assis\Software\LiDAR-Python-Code\pre_processing\52I212_plot10.las</CommandLineArguments>
+    <EnableNativeCodeDebugging>False</EnableNativeCodeDebugging>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>true</DebugSymbols>
@@ -26,6 +27,13 @@
     <Compile Include="colors2.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="DTM1.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DTM2.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="findTrees.py" />
     <Compile Include="FlipRotate.py" />
   </ItemGroup>
   <PropertyGroup>
