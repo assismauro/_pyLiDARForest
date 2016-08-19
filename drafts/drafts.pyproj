@@ -5,8 +5,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>48485318-d65c-421a-b5d1-a779db7796e0</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>
-    </StartupFile>
+    <StartupFile>metrics1.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -14,7 +13,7 @@
     <Name>drafts</Name>
     <RootNamespace>drafts</RootNamespace>
     <LaunchProvider>Standard Python launcher</LaunchProvider>
-    <CommandLineArguments>E:\mauro.assis\Software\LiDAR-Python-Code\pre_processing\52I212_plot10.las</CommandLineArguments>
+    <CommandLineArguments>G:\TRANSECTS\T_356\NP_T-356_LAS\NP_T-356.las g:\flt_NP_T-356.las -t o -ft outlier -ws 20 -stdm 3.0 -v</CommandLineArguments>
     <EnableNativeCodeDebugging>False</EnableNativeCodeDebugging>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
@@ -26,6 +25,12 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="helper.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="metrics1.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="colors2.py">
       <SubType>Code</SubType>
     </Compile>
