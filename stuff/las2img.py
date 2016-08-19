@@ -30,7 +30,7 @@ class las2img(object):
 
     @staticmethod
     def ProcessCmdLine():
-        # D:\CCST\Software\img2lidar\img\ebablog.png -x 807000 -y 9710000 -zf (z>0) -xr 0.5 -yr 0.5 -zr 0.20 -mz 100 -bz 100 -bxy 1 -d 5
+        # G:\TRANSECTS\T_002\NP_T-002_LAS\NP_T-002.LAS G:\TRANSECTS\T_002\NP_T-002_LAS -P 1 -f 0 -v
         parser = argparse.ArgumentParser(description="Convert LiDAR (las) to image file.")
         parser.add_argument("inputfname", type=str, 
             help = "LiDAR file to process.")
