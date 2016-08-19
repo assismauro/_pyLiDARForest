@@ -31,6 +31,7 @@ Select validations to run (by number):
 1 - File signature
 2 - LAS file version
 3 - Number of returns
+4 - Return numbers
 4 - Minimum and maximum values
 5 - Global points density
 6 - Percent 
@@ -73,24 +74,25 @@ def ProcessFile(inputfname,lasversion,minimumpointsdensity,displayheader,cellsiz
             failCount+=validate.CheckNumberofReturns()
 
         if 4 in validate.activevalidations:
+            failCount+=validate.CheckReturnNumbers()
+
+        if 5 in validate.activevalidations:
             failCount+=validate.CheckMinMaxValues()
 
-        if (5 in validate.activevalidations) or (6 in validate.activevalidations):
-            if cellsize > 0:
-                validate.cellsize = cellsize
+        if (6 in validate.activevalidations) or (7 in validate.activevalidations):
             validate.CreateShpFileLAS()
             catalogOk=validate.RunCatalog()
             if catalogOk:
                 validate.CalcShapeFileArea()
 
-        if 5 in validate.activevalidations:
+        if 6 in validate.activevalidations:
             failCount+=validate.CheckGlobalPointsDensity()
 
-        if 6 in validate.activevalidations:
-            if catalogOk and (cellsize > 0) and (maxpercentcellsbelowdensity > 0):
+        if 7 in validate.activevalidations:
+            if catalogOk:
                 failCount+=validate.CheckMaxCellsBelowDensity()
 
-        if 7 in validate.activevalidations:
+        if 8 in validate.activevalidations:
             failCount+=validate.CheckXtYtZt()
     except:
         if 'validate' in locals():
@@ -121,7 +123,7 @@ if __name__ == '__main__':
         selectedvalidations=args.selectedvalidations
     activevalidations=map(int,selectedvalidations.split(','))
     if (args.csvresults != None):
-        Validate.CreateCsv(args.csvresults,activevalidations)
+        Validate.CreateCsv(5,args.csvresults,activevalidations)
     path, filemask = os.path.split(args.inputfname)
     files=sorted(Validate.FindFiles(path,filemask))
     if len(files) == 0:
