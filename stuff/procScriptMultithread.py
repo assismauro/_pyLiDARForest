@@ -16,12 +16,12 @@ def Header():
     print
 
 def ParseCmdLine():
-    parser = argparse.ArgumentParser(description='Validate LAS files.',formatter_class=RawTextHelpFormatter)
+    parser = argparse.ArgumentParser(description='Process python scripts in multiprocessing mode.',formatter_class=RawTextHelpFormatter)
     parser.add_argument('programname',help='Python script file')
-    parser.add_argument('inputfname',help='las file to be processed.')
+    parser.add_argument('inputfname',help='las file mask to be processed.')
     parser.add_argument('-c','--processorcores', type=int, help='Processor cores to use.', default = 1)
     parser.add_argument('-o','--otherparams',help='complementary parameters.')
-    parser.add_argument("-v","--verbose",type=int, help = "Show intermediate messages.")
+    parser.add_argument("-v","--verbose",type=int, help = "Show intermediate messages.", default = 0)
 
     return parser.parse_args()
 
