@@ -138,7 +138,7 @@ def splitCells(inputfname, cellsize=-1, numberofcells=-1, verbose=False):
                 continue
             
             fnametile = r"{0}\{1}_{2}_{3}".format(os.path.dirname(inputfname),stepX,stepY,os.path.basename(inputfname))
-            points = inFile.points[logicXY]
+            points = inFile.points[validXY]
             saveCloud(fnametile,inFile.header,points)
 # In[48]:
     inFile.close()
