@@ -6,6 +6,7 @@ import glob
 import fnmatch
 import laspy
 import numpy as np
+import collections
 import subprocess
 import shapefile
 import shutil
@@ -28,8 +29,9 @@ class Validate(object):
     activevalidations = []
         
     def __init__(self,inputfname, parameters):
-        self.inputfname = inputfname;
+        self.inputfname = inputfname
         self.inFile = laspy.file.File(self.inputfname, mode = 'r')
+        self.areatransect=None
         self._errorMessages = '' 
         self.parameters = parameters
         if self.validatefilespath != None:
@@ -42,32 +44,33 @@ class Validate(object):
                     self.DeleteFiles(self.validatefilespath,self.deletefiles) 
 
     def GetLASInfoStr(self,header):
-        return '{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12}'.format(
+        s='{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12},{13},{14},{15},{16},{17},{18},{19},{20},'.format(
             header.guid,
             header.file_source_id,
             header.global_encoding,
             header.project_id,
             header.version,
             header.date,
-            header.system_id,
-            header.software_id,
+            header.system_id.strip('\x00'),
+            header.software_id.strip('\x00'),
             header.point_records_count,
-            header.scale,
-            header.offset,
-            header.min,
-            header.max
-            )
-
+            header.scale[0],header.scale[1],header.scale[2],
+            header.offset[0],header.offset[1],header.offset[2],
+            header.min[0],header.min[1],header.min[2],
+            header.max[0],header.max[1],header.max[2])
+        for i in range(len(header.point_return_count)):
+            s+=str(header.point_return_count[i])+','
+        s+=str(self.areatransect)
+        return s
 
     def Close(self):
         if self.csvresults != None:
             try:
                 with open(self.csvresults,'a') as csv:
-                    line=self.inputfname+','
-                    fdata=self.GetLASInfoStr(self.inFile.header)+','
+                    line=self.inputfname+','+self.GetLASInfoStr(self.inFile.header)+','
                     for i in range(0,len(self.validateok)):
                         line+=str(self.validateok[i])+','
-                    csv.write('{0}{1}'.format(line[:-1],'\n'))                    
+                    csv.write('{0},{1}\n'.format(line[:-1],self._errorMessages.replace('\r',' ').replace('\n',' ').replace(",","")))                    
                     csv.close()
             except:
                 print("Unexpected error:", sys.exc_info()[0])
@@ -91,12 +94,16 @@ class Validate(object):
             print
 
     @staticmethod
-    def CreateCsv(csvresults,activevalidations):
+    def CreateCsv(return_point_count,csvresults,activevalidations):
         csv=open(csvresults,'w')
-        line='LAS file,'
+        line='LAS_file,guid,file_source_id,global_encoding,project_id,version,date,system_id,software_id,point_records_count,'+\
+             'scale_X,scale_Y,scale_Z,offset_X,offset_Y,offset_Z,min_X,min_Y,min_Z,max_X,max_Y,max_Z,'
+        for i in range(return_point_count):
+            line+='point_return_count_{0},'.format(i+1)
+        line+='areatransect,'
         for i in range(len(activevalidations)):
             line+=str(activevalidations[i])+','
-        csv.write('{0}{1}'.format(line[:-1],'\n'))
+        csv.write('{0}error_messages\n'.format(line))
         csv.close()
 
     @staticmethod
@@ -113,13 +120,13 @@ class Validate(object):
                          stderr=subprocess.STDOUT)
         return p.communicate()
 
-    def Area(self,corners):
-        n = len(corners) - 1 # of corners
+    def Area(self,points):
+        n = len(points) - 1 # of corners
         area = 0.0
         for i in range(n):
             j = (i + 1) % n
-            area += corners[i][0] * corners[j][1]
-            area -= corners[j][0] * corners[i][1]
+            area += points[i][0] * points[j][1]
+            area -= points[j][0] * points[i][1]
         return abs(area) / 2.0
 
     def DeleteFiles(self,path,delfiles):
@@ -159,6 +166,24 @@ class Validate(object):
             return 1
         self.TestOk()
         return 0
+
+    def CheckReturnNumbers(self):
+        if Validate.verbose > 0: 
+            print
+            print('Check return numbers')
+        errorMessage=''
+        cr=collections.Counter(self.inFile.return_num)
+        if len(cr) != len(self.inFile.header.point_return_count):
+            errorMessage='There are more return number values ({0}) than described in header ({1}).\r\n'.format(len(cr),len(self.inFile.header.point_return_count))
+        for i in range(len(self.inFile.header.point_return_count)):
+            if (cr[i+1] != self.inFile.header.point_return_count[i]):
+                errorMessage+="Number of returns ({0}) specified in header ({1}) is different of the existing in the point cloud ({2})\r\n".format(i+1,self.inFile.header.point_return_count[i],cr[i+1])
+        if(errorMessage != ''):
+            self.TestFail(errorMessage)
+            return 1
+        else:
+            self.TestOk()
+            return 0
 
     def CheckGlobalPointsDensity(self):
         if Validate.verbose > 0: 
@@ -297,16 +322,21 @@ def main():
 
     inputfname = r'H:\NP_T-054_FWF.las'
 
-    Validate.version = '1.3'
+    Validate.version = '1.2'
     Validate.minimumpointsdensity = 4
     Validate.displayheader = False
     Validate.cellsize = 1
     Validate.maxpercentcellsbelowdensity = 20
     Validate.validatefilespath = r'e:\temp'
 #    Validate.deletefiles = True
-    Validate.csvresults = True
-    Validate.activevalidations=(1,2,3,4,5,6,7)
+    Validate.csvresults = 'results_test.csv'
+#    Validate.activevalidations=(1,2,3,4,5,6,7,8)
+    Validate.activevalidations=(1,2,4)
     Validate.verbose = 1
+
+    if (Validate.csvresults != None):
+        Validate.CreateCsv(5,Validate.csvresults,Validate.activevalidations)
+
 
     if(Validate.displayheader):
         lidarutils.displayInfo(inputfname)
@@ -332,22 +362,25 @@ def main():
         failCount+=validate.CheckNumberofReturns()
 
     if 4 in validate.activevalidations:
+        failCount+=validate.CheckReturnNumbers()
+
+    if 5 in validate.activevalidations:
         failCount+=validate.CheckMinMaxValues()
 
-    if (5 in validate.activevalidations) or (6 in validate.activevalidations):
+    if (6 in validate.activevalidations) or (7 in validate.activevalidations):
         validate.CreateShpFileLAS()
         catalogOk=validate.RunCatalog()
         if catalogOk:
             validate.CalcShapeFileArea()
 
-    if 5 in validate.activevalidations:
+    if 6 in validate.activevalidations:
         failCount+=validate.CheckGlobalPointsDensity()
 
-    if 6 in validate.activevalidations:
+    if 7 in validate.activevalidations:
         if catalogOk:
             failCount+=validate.CheckMaxCellsBelowDensity()
 
-    if 7 in validate.activevalidations:
+    if 8 in validate.activevalidations:
         failCount+=validate.CheckXtYtZt()
     if Validate.verbose > 0:
         if failCount == 0:
