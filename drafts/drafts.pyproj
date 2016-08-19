@@ -5,8 +5,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>48485318-d65c-421a-b5d1-a779db7796e0</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>
-    </StartupFile>
+    <StartupFile>DTM2.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -29,6 +28,7 @@
     <Compile Include="colors2.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="divide.py" />
     <Compile Include="DTM1.py">
       <SubType>Code</SubType>
     </Compile>
