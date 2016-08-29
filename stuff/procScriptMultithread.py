@@ -16,14 +16,19 @@ def Header():
     print
 
 def ParseCmdLine():
+    # procScriptMultithread.py E:\mauro.assis\Software\pyLiDARForest\stuff\calcParams.py  g:\transects\np_t-???.las -c 4 -o="-c 100 -ac 2 -rn 4 -csv E:\mauro.assis\Software\pyLiDARForest\stuff\calcresult2.csv" -iscmd 0
     parser = argparse.ArgumentParser(description='Process python scripts in multiprocessing mode.',formatter_class=RawTextHelpFormatter)
     parser.add_argument('programname',help='Python script file')
     parser.add_argument('inputfname',help='las file mask to be processed.')
+    parser.add_argument('-iscmd','--iscommandline', type=int, default=0, help='Execute python script')
     parser.add_argument('-c','--processorcores', type=int, help='Processor cores to use.', default = 1)
-    parser.add_argument('-o','--otherparams',help='complementary parameters.')
+    parser.add_argument('-o','--otherparams',type=str, help='complementary parameters.')
     parser.add_argument("-v","--verbose",type=int, help = "Show intermediate messages.", default = 0)
+    try:
+        return parser.parse_args()
+    except:
+        print sys.exc_info()[0]
 
-    return parser.parse_args()
 
 def RunCommand(command, verbose):
     p = subprocess.Popen(command,
@@ -41,12 +46,12 @@ def FindFiles(directory, pattern):
             flist.append(os.path.join(root, filename))
     return flist
 
-def ProcessFile(program,fname,options,verbose):
-    RunCommand('python {0} {1} {2}'.format(program,fname,options), verbose)
+def ProcessFile(program,fname,options,iscmd,verbose):
+    RunCommand('{0}{1} {2} {3}'.format(('python ' if iscmd==0 else ''), program,fname,options), verbose)
 
 if __name__ == '__main__':
     Header()
-    args=ParseCmdLine()
+    args=ParseCmdLine()   
     start = time.time()
     failcount=0
     path, filemask = os.path.split(args.inputfname)
@@ -62,13 +67,13 @@ if __name__ == '__main__':
 
     while i < (len(files) / threads * threads):
         if threads == 1:
-            ProcessFile(args.programname,files[i],args.otherparams,args.verbose)
+            ProcessFile(args.programname,files[i],args.otherparams,args.iscommandline,args.verbose)
             i+=1
             continue
         startpool=time.time()
         p=Pool(threads)
         for thread in range(0,threads):
-            params=(args.programname,files[i + thread],args.otherparams,args.verbose)
+            params=(args.programname,files[i + thread],args.otherparams,args.iscommandline,args.verbose)
             p=Process(target=ProcessFile,args=params)
             jobs.append(p)
             p.start()
@@ -77,9 +82,9 @@ if __name__ == '__main__':
         print('Pool elapsed time: {0:.2f}s'.format(time.time()-startpool))    
         i+=threads
     while i < len(files):
-        params=(args.programname,files[i],args.otherparams,args.verbose)
+        params=(args.programname,files[i],args.otherparams,args.iscommandline,args.verbose)
         if threads == 1:
-            ProcessFile(args.programname,files[i],args.otherparams,args.verbose)    
+            ProcessFile(args.programname,files[i],args.otherparams,args.iscommandline,args.verbose)    
             i+=1    
             continue        
         startpool = time.time()
