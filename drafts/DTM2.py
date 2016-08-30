@@ -18,7 +18,7 @@ from scipy.interpolate import interp1d
 from scipy.interpolate import UnivariateSpline
 
 
-def processTiles(csvfilename, xtilesize, ytilesize): #allocates min and max values for x,y for each tile
+def processTiles(csvfilename, xtilesize, ytilesize): #Splits area into tiles and allocates min and max values for x,y for each tile. Returns number of tiles
 
     cloud = np.genfromtxt(csvfilename, delimiter=',')
    
@@ -279,7 +279,7 @@ def slopeCheck(cell_grid, cells, stepsX, stepsY): #if there is a change in gradi
     return cells 
 
 
-def splineInterpolation(resolution, cell_grid, cells, stepsX, stepsY, xMin, xMax, yMin, yMax):
+def splineInterpolation(resolution, cell_grid, cells, stepsX, stepsY, xMin, xMax, yMin, yMax): #Cubic spline interpolation across x and then y of a tile to create a DTM at desired resolution from grid of points with gaps
 
     #1D cubic spline interpolation across y values (const x) first. Then across x values (const y).
     #set up DTM with y values at desired resolution but x values still separated by previous cell size
@@ -333,7 +333,7 @@ def DTMarea(xtilesize, ytilesize):
         cloud, x_Min, x_Max, y_Min, y_Max, numTiles = processTiles(csvfilename, xtilesize, ytilesize)
 
 
-        DTMall = np.empty([600,3])
+        DTMall = np.empty([600,3]) #FIND A WAY FOR THE ALGORITHM TO INPUT THE 600 WITHOUT HAVING TO DO IT MANUALLY. 
         rows = 0
 
         for tile in range(numTiles):
@@ -382,3 +382,22 @@ xtilesize, ytilesize = 100, 100
 DTM = DTMarea(xtilesize, ytilesize)
 
 plotSurf3D(DTM[:,0], DTM[:,1], DTM[:,2], 'DTM of tiles')
+
+
+"""Create arrays containing the xtilesizes and ytileizes. Length of each array should be number of tilesizes to run. 
+Can try y = 60, 75, 100 and x = 60, 70, 80 , 90, 100, 110, 120. This will give 21 different DTMs all at the same resolution.
+
+
+for i in range(len(xtilesize)):
+    DTM = DTMarea(xtilesize[i], ytilesize[i]) #change DTM to a matrix of more dimensions as described below. 
+however need to find a way to store DTM for each tilesize. 
+For example DTM matrix has: number of rows given by the number of corrdinates in the area, number of columns given by nuber of tilesizes +2(for x,y). 
+Then take median of z values as described above to give final DTM, (DTMfinal). 
+
+    
+If number of DTMs is odd, for each cell (10x10) choose the median of all the elevations from the DTMs. 
+If number of DTMs is even, take mean of middle 2 elevations. 
+
+NB. in DTMarea function the matrix DMTall is defined with dimensions 600x3. 600 here is chosen as there are 600 points in the DTM which covers the area of 200x300m at resolution of 10x10m. 
+IF you are working with a different sized area or at a different resolutions please change this number appropriately. 
+Or maybe you can change the code a little so it works out this number for you..?"""
