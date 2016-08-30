@@ -16,11 +16,11 @@ def Header():
     print
 
 def ParseCmdLine():
-    # procScriptMultithread.py E:\mauro.assis\Software\pyLiDARForest\stuff\calcParams.py  g:\transects\np_t-???.las -c 4 -o="-c 100 -ac 2 -rn 4 -csv E:\mauro.assis\Software\pyLiDARForest\stuff\calcresult2.csv" -iscmd 0
+    # procScriptMultithread.py E:\mauro.assis\Software\pyLiDARForest\stuff\calcParams.py  g:\transects\np_t-???.las -c 1 -o="-c 100 -ac 2 -rn 4 -csv E:\mauro.assis\Software\pyLiDARForest\stuff\calcresult2.csv" -iscmd 0
     parser = argparse.ArgumentParser(description='Process python scripts in multiprocessing mode.',formatter_class=RawTextHelpFormatter)
     parser.add_argument('programname',help='Python script file')
-    parser.add_argument('inputfname',help='las file mask to be processed.')
-    parser.add_argument('-iscmd','--iscommandline', type=int, default=0, help='Execute python script')
+    parser.add_argument('inputfname',help='File mask to be processed. If txt extension, it will consider as a txt file containing a file names list to be processed.')
+    parser.add_argument('-iscmd','--iscommandline', type=int, default=0, help='If 0, execute python script, else run a program (exe file).')
     parser.add_argument('-c','--processorcores', type=int, help='Processor cores to use.', default = 1)
     parser.add_argument('-o','--otherparams',type=str, help='complementary parameters.')
     parser.add_argument("-v","--verbose",type=int, help = "Show intermediate messages.", default = 0)
@@ -54,8 +54,14 @@ if __name__ == '__main__':
     args=ParseCmdLine()   
     start = time.time()
     failcount=0
-    path, filemask = os.path.split(args.inputfname)
-    files=sorted(FindFiles(path,filemask))
+    extension = os.path.splitext(args.inputfname)[1]
+    if extension.upper() == '.TXT':
+        f = open(args.inputfname)
+        files = f.readlines()
+    else:
+        path, filemask = os.path.split(args.inputfname)
+        files=FindFiles(path,filemask)
+    files = sorted(files)
     if len(files) == 0:
         print('There''s no file to process.')
         sys.exit(1)
