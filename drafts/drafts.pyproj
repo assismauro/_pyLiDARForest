@@ -45,6 +45,9 @@
     <Compile Include="LASViewerTest.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="rotateDivide.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="scatterGraphics.py">
       <SubType>Code</SubType>
     </Compile>
