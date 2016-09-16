@@ -118,7 +118,7 @@ if __name__ == '__main__':
     Header()
     args=ParseCmdLine()
     if args.selectedvalidations == None:
-        selectedvalidations='1,2,3,4,5,6,7'
+        selectedvalidations='1,2,3,4,5,6,7,8'
     else:
         selectedvalidations=args.selectedvalidations
     activevalidations=map(int,selectedvalidations.split(','))

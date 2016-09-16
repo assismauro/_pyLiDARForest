@@ -32,6 +32,7 @@ class Validate(object):
         self.inputfname = inputfname
         self.inFile = laspy.file.File(self.inputfname, mode = 'r')
         self.areatransect=None
+        self.globalpointsdensity=None
         self._errorMessages = '' 
         self.parameters = parameters
         if self.validatefilespath != None:
@@ -44,8 +45,7 @@ class Validate(object):
                     self.DeleteFiles(self.validatefilespath,self.deletefiles) 
 
     def GetLASInfoStr(self,header):
-        s='{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12},{13},{14},{15},{16},{17},{18},{19},{20},'.format(
-            header.guid,
+        s='{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12},{13},{14},{15},{16},{17},{18},{19},'.format(
             header.file_source_id,
             header.global_encoding,
             header.project_id,
@@ -60,7 +60,7 @@ class Validate(object):
             header.max[0],header.max[1],header.max[2])
         for i in range(len(header.point_return_count)):
             s+=str(header.point_return_count[i])+','
-        s+=str(self.areatransect)
+        s+='{0},{1}'.format(self.areatransect if self.areatransect != None else "NaN",self.globalpointsdensity if self.globalpointsdensity != None else "NaN")
         return s
 
     def Close(self):
@@ -96,11 +96,11 @@ class Validate(object):
     @staticmethod
     def CreateCsv(return_point_count,csvresults,activevalidations):
         csv=open(csvresults,'w')
-        line='LAS_file,guid,file_source_id,global_encoding,project_id,version,date,system_id,software_id,point_records_count,'+\
+        line='LAS_file,file_source_id,global_encoding,project_id,version,date,system_id,software_id,point_records_count,'+\
              'scale_X,scale_Y,scale_Z,offset_X,offset_Y,offset_Z,min_X,min_Y,min_Z,max_X,max_Y,max_Z,'
         for i in range(return_point_count):
             line+='point_return_count_{0},'.format(i+1)
-        line+='areatransect,'
+        line+='areatransect,globalpointsdensity,'
         for i in range(len(activevalidations)):
             line+=str(activevalidations[i])+','
         csv.write('{0}error_messages\n'.format(line))
@@ -189,11 +189,11 @@ class Validate(object):
         if Validate.verbose > 0: 
             print
             print('Check global point density')
-        cloudpointsdensity = self.inFile.header.point_records_count / self.areatransect
+        self.globalpointsdensity = self.inFile.header.point_records_count / self.areatransect
         if Validate.verbose > 0:        
-            print('Cloud points density: {0}, Minimum expected points density: {1}'.format(cloudpointsdensity,Validate.minimumpointsdensity))
-        if(cloudpointsdensity < float(Validate.minimumpointsdensity)):
-            self.TestFail('Points density below minimum: is {0} and should be at least {1}\r\n'.format(cloudpointsdensity,Validate.minimumpointsdensity))
+            print('Cloud points density: {0}, Minimum expected points density: {1}'.format(self.globalpointsdensity,Validate.minimumpointsdensity))
+        if(self.globalpointsdensity < float(Validate.minimumpointsdensity)):
+            self.TestFail('Points density below minimum: is {0} and should be at least {1}\r\n'.format(self.globalpointsdensity,Validate.minimumpointsdensity))
             return 1
         else:
             self.TestOk()
@@ -320,7 +320,7 @@ class Validate(object):
 
 def main():
 
-    inputfname = r'H:\NP_T-054_FWF.las'
+    inputfname = r'G:\TRANSECTS\T_171\NP_T-171_LAS\NP_T-171.LAS'
 
     Validate.version = '1.2'
     Validate.minimumpointsdensity = 4
@@ -331,7 +331,7 @@ def main():
 #    Validate.deletefiles = True
     Validate.csvresults = 'results_test.csv'
 #    Validate.activevalidations=(1,2,3,4,5,6,7,8)
-    Validate.activevalidations=(1,2,4)
+    Validate.activevalidations=(6,7)
     Validate.verbose = 1
 
     if (Validate.csvresults != None):

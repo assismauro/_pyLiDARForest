@@ -66,7 +66,7 @@ def divideSquares(lasfilename):
     print cloud[:,1].min(), cloud[:,0].min()
     print  len(cloud[cloud[:,0]<0,:]),  len(cloud[cloud[:,1]<0])
   
-    np.savetxt('cloudsectTransf.csv', cloud, delimiter=',', header='x,y,z')
+    np.savetxt('cloudsectTransf.csv', cloud, delimiter=',', fmt='%1.10f', header='x,y,z')
     
 
 divideSquares(lasfilename)

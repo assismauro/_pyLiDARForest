@@ -5,15 +5,14 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>48485318-d65c-421a-b5d1-a779db7796e0</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>metrics1.py</StartupFile>
-    <SearchPath>
-    </SearchPath>
+    <StartupFile>..\stuff\procScriptMultithread.py</StartupFile>
+    <SearchPath>..\stuff\</SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
     <OutputPath>.</OutputPath>
     <Name>drafts</Name>
     <RootNamespace>drafts</RootNamespace>
     <LaunchProvider>Standard Python launcher</LaunchProvider>
-    <CommandLineArguments>G:\TRANSECTS\T_356\NP_T-356_LAS\NP_T-356.las g:\flt_NP_T-356.las -t o -ft outlier -ws 20 -stdm 3.0 -v</CommandLineArguments>
+    <CommandLineArguments>E:\mauro.assis\Software\pyLiDARForest\stuff\calcParams.py  -ifn g:\transects\np_t-???.las -c 1 -o="-c 100 -ac 2 -rn 4 -csv E:\mauro.assis\Software\pyLiDARForest\stuff\calcresult2.csv"</CommandLineArguments>
     <EnableNativeCodeDebugging>False</EnableNativeCodeDebugging>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
@@ -25,13 +24,14 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="..\stuff\procScriptMultithread.py">
+      <Link>procScriptMultithread.py</Link>
+    </Compile>
+    <Compile Include="calcParams.py" />
     <Compile Include="helper.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="metrics1.py">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="colors2.py">
+    <Compile Include="fusion.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="DTM1.py">
@@ -41,7 +41,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="findTrees.py" />
-    <Compile Include="FlipRotate.py" />
     <Compile Include="LASViewerTest.py">
       <SubType>Code</SubType>
     </Compile>

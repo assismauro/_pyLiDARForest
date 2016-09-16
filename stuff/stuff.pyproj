@@ -5,7 +5,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{b2861bb1-7eb3-4559-b385-152e18ed386a}</ProjectGuid>
     <ProjectHome />
-    <StartupFile>las2img.py</StartupFile>
+    <StartupFile>CheckDirFileStruct.py</StartupFile>
     <SearchPath>..\lidarutils\</SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
     <OutputPath>.</OutputPath>
@@ -13,7 +13,7 @@
     <LaunchProvider>Standard Python launcher</LaunchProvider>
     <InterpreterId />
     <InterpreterVersion />
-    <CommandLineArguments>G:\TRANSECTS\T_054\NP_T-296_LAS\NP_T-296.las G:\TRANSECTS\IMG -p 0 -i -r 0.0036 -v 1</CommandLineArguments>
+    <CommandLineArguments>-h</CommandLineArguments>
     <EnableNativeCodeDebugging>True</EnableNativeCodeDebugging>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)' == 'Debug'" />

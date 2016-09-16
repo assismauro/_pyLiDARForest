@@ -44,6 +44,8 @@ def CheckDirFileStruct():
     therearebugs=False
     for subdir in subdirs:
         transect = subdir[-3:]
+        if not transect.isdigit():
+            continue
         for item in struct:
             item = item.strip()
             if item == "":
