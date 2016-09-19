@@ -41,6 +41,12 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="findTrees.py" />
+    <Compile Include="classLASTools.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="LASTools.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="LASViewerTest.py">
       <SubType>Code</SubType>
     </Compile>
